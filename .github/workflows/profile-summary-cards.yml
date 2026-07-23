@@ -19,17 +19,15 @@ jobs:
     runs-on: ubuntu-latest
     name: generate-github-profile-summary-cards
     permissions:
-      # Required so the built-in GITHUB_TOKEN can push the generated cards back
       contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: vn7n24fzkq/github-profile-summary-cards@release
         env:
-          # Uses the workflow's built-in token (public data only).
-          # To include private-repo activity, create a PAT, store it as a repo
-          # secret named SUMMARY_GITHUB_TOKEN, and swap the line below to:
-          #   GITHUB_TOKEN: ${{ secrets.SUMMARY_GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Personal access token (classic, repo scope) stored as a repo secret.
+          # The built-in GITHUB_TOKEN does NOT work here: this action's GraphQL
+          # queries return "Resource not accessible by integration" with it.
+          GITHUB_TOKEN: ${{ secrets.SUMMARY_GITHUB_TOKEN }}
         with:
           USERNAME: ${{ github.repository_owner }}
           BRANCH_NAME: "main"
