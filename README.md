@@ -7,6 +7,8 @@
 
 Nantes area, France · [@amzn](https://github.com/amzn) · maintainer of [@NatronGitHub](https://github.com/NatronGitHub)
 
+<a href="https://openhub.net/accounts/devernay?ref=sample"><img alt="Open Hub profile for Frédéric Devernay" height="35" src="https://openhub.net/accounts/devernay/widgets/account_detailed?format=gif&ref=sample" width="232"></a>
+
 ---
 ![](./profile-summary-card-output/github/0-profile-details.svg)
 
