@@ -8,7 +8,6 @@
 Nantes area, France · [@amzn](https://github.com/amzn) · maintainer of [@NatronGitHub](https://github.com/NatronGitHub)
 
 ---
-
 ![](./profile-summary-card-output/github/0-profile-details.svg)
 
 ![](./profile-summary-card-output/github/1-repos-per-language.svg)
