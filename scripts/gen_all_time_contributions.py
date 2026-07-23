@@ -61,7 +61,7 @@ def render(login, years, total, start_year, out):
     )
     p.append(
         f'<text x="{left-20}" y="26" font-family="{font}" font-size="15" '
-        f'font-weight="600" fill="{title_color}">Contributions (all time)</text>'
+        f'font-weight="600" fill="{title_color}">GitHub contributions</text>'
     )
     p.append(
         f'<text x="{width-right}" y="26" text-anchor="end" font-family="{font}" '
