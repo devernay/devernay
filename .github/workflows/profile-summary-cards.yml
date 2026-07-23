@@ -6,7 +6,7 @@ on:
     - cron: "0 0 * * *"
   # Allow manual runs from the Actions tab
   workflow_dispatch:
-  # Run on push to main, but ignore the action's own output/README commits
+  # Run on push to main, but ignore the generated output/README commits
   # so it doesn't trigger itself in a loop
   push:
     branches: [main]
@@ -22,18 +22,41 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          # PAT so the final "git push" of the generated cards works
+          token: ${{ secrets.SUMMARY_GITHUB_TOKEN }}
+
+      # 1) Standard summary cards (0-4). AUTO_PUSH is off so we can commit
+      #    them together with our custom card in a single push below.
       - uses: vn7n24fzkq/github-profile-summary-cards@release
         env:
-          # Personal access token (classic, repo scope) stored as a repo secret.
-          # The built-in GITHUB_TOKEN does NOT work here: this action's GraphQL
-          # queries return "Resource not accessible by integration" with it.
           GITHUB_TOKEN: ${{ secrets.SUMMARY_GITHUB_TOKEN }}
         with:
           USERNAME: ${{ github.repository_owner }}
           BRANCH_NAME: "main"
-          # UTC+2 (Europe/Paris, CEST) so productive-time hours are correct
           UTC_OFFSET: 2
-          # Generate just the "github" theme (matches the README references).
-          # Leave empty ("") to generate every theme instead.
           THEME: "github"
-          AUTO_PUSH: true
+          AUTO_PUSH: false
+
+      # 2) Custom all-time contributions histogram (card 5)
+      - name: Generate all-time contributions histogram
+        env:
+          GITHUB_TOKEN: ${{ secrets.SUMMARY_GITHUB_TOKEN }}
+        run: |
+          python3 scripts/gen_all_time_contributions.py \
+            "${{ github.repository_owner }}" \
+            profile-summary-card-output/github/5-all-time-contributions.svg
+
+      # 3) Commit and push everything in one commit (touches only ignored
+      #    paths, so this push does not retrigger the workflow)
+      - name: Commit generated cards
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add profile-summary-card-output
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Generate profile summary cards"
+            git push
+          fi
