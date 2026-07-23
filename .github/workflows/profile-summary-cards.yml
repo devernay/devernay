@@ -1,0 +1,41 @@
+name: GitHub Profile Summary Cards
+
+on:
+  schedule:
+    # Regenerate the cards once a day (00:00 UTC)
+    - cron: "0 0 * * *"
+  # Allow manual runs from the Actions tab
+  workflow_dispatch:
+  # Run on push to main, but ignore the action's own output/README commits
+  # so it doesn't trigger itself in a loop
+  push:
+    branches: [main]
+    paths-ignore:
+      - "profile-summary-card-output/**"
+      - "README.md"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: generate-github-profile-summary-cards
+    permissions:
+      # Required so the built-in GITHUB_TOKEN can push the generated cards back
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: vn7n24fzkq/github-profile-summary-cards@release
+        env:
+          # Uses the workflow's built-in token (public data only).
+          # To include private-repo activity, create a PAT, store it as a repo
+          # secret named SUMMARY_GITHUB_TOKEN, and swap the line below to:
+          #   GITHUB_TOKEN: ${{ secrets.SUMMARY_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          USERNAME: ${{ github.repository_owner }}
+          BRANCH_NAME: "main"
+          # UTC+2 (Europe/Paris, CEST) so productive-time hours are correct
+          UTC_OFFSET: 2
+          # Generate just the "github" theme (matches the README references).
+          # Leave empty ("") to generate every theme instead.
+          THEME: "github"
+          AUTO_PUSH: true
