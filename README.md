@@ -18,3 +18,5 @@ Nantes area, France · [@amzn](https://github.com/amzn) · maintainer of [@Natro
 ![](./profile-summary-card-output/github/4-productive-time.svg)
 
 <sub>Cards regenerated daily by <a href="https://github.com/vn7n24fzkq/github-profile-summary-cards">github-profile-summary-cards</a> via GitHub Actions.</sub>
+
+<!-- profile README -->
